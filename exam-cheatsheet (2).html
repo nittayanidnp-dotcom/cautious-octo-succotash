@@ -1,0 +1,1521 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F4A28C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>ชีทดูหน้าห้องสอบ ครูผู้ช่วย · อีหล่าอ่านหนังสือ</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800;900&family=Noto+Serif+Thai:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFF8F5; --paper:#FFFFFF; --ink:#3D2C2C; --ink2:#6A4A4A; --muted:#C0A0A0; --border:#F0DDD8;
+  --peach:#F4A28C; --peach-dark:#D06048; --peach-pale:#FFF0EB; --peach-mid:#F9C4B0;
+  --mint:#7EC8B0;  --mint-dark:#3A9E82;  --mint-pale:#EDFAF5;  --mint-mid:#AADFC9;
+  --lav:#C0A8E0;   --lav-dark:#8060B8;   --lav-pale:#F5F0FF;   --lav-mid:#D8C8F0;
+  --sky:#88C4EC;   --sky-dark:#3880C0;   --sky-pale:#EEF6FF;   --sky-mid:#B8D8F8;
+  --yell:#F8D060;  --yell-dark:#C09010;  --yell-pale:#FFFBEA;  --yell-mid:#FAE898;
+  --rose:#F09898;  --rose-dark:#C05050;  --rose-pale:#FFF0F0;  --rose-mid:#F8C8C8;
+  --sage:#90CC88;  --sage-dark:#488040;  --sage-pale:#F0FAF0;  --sage-mid:#C0E0B8;
+  --gold:#F5C842;  --gold-dark:#C09010;  --gold-pale:#FFFBEA;  --gold-mid:#FAE898;
+
+  /* shortcuts still used in some blocks */
+  --peach-d:var(--peach-dark); --peach-p:var(--peach-pale); --peach-m:var(--peach-mid);
+  --mint-d:var(--mint-dark);   --mint-p:var(--mint-pale);   --mint-m:var(--mint-mid);
+  --lav-d:var(--lav-dark);     --lav-p:var(--lav-pale);     --lav-m:var(--lav-mid);
+  --sky-d:var(--sky-dark);     --sky-p:var(--sky-pale);     --sky-m:var(--sky-mid);
+  --yell-d:var(--yell-dark);   --yell-p:var(--yell-pale);   --yell-m:var(--yell-mid);
+  --rose-d:var(--rose-dark);   --rose-p:var(--rose-pale);   --rose-m:var(--rose-mid);
+  --sage-d:var(--sage-dark);   --sage-p:var(--sage-pale);   --sage-m:var(--sage-mid);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+html{-webkit-text-size-adjust:100%;}
+
+body{
+  font-family:'Sarabun',sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  font-size:14px;
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:
+    radial-gradient(circle,rgba(244,162,140,.1) 1.5px,transparent 1.5px),
+    radial-gradient(circle,rgba(126,200,176,.08) 1.5px,transparent 1.5px);
+  background-size:36px 36px,56px 56px;
+  background-position:0 0,18px 18px;
+}
+
+/* ── HEADER ── */
+.hdr{
+  background:linear-gradient(135deg,#F4A28C 0%,#E8839A 50%,#B8A0D8 100%);
+  color:#fff;padding:20px 20px 32px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.hdr::before{
+  content:'✦ ✧ ★ ✦ ✧ ★ ✦ ✧ ★ ✦ ✧ ★ ✦ ✧ ★ ✦';
+  position:absolute;top:5px;left:0;right:0;
+  font-size:10px;letter-spacing:5px;opacity:.28;overflow:hidden;white-space:nowrap;
+}
+.hdr::after{
+  content:'';position:absolute;bottom:-1px;left:0;right:0;
+  height:22px;background:var(--bg);
+  clip-path:ellipse(55% 100% at 50% 100%);
+}
+.hdr-brand{
+  display:inline-block;
+  background:rgba(255,255,255,.22);border:1.5px solid rgba(255,255,255,.5);
+  font-size:11px;font-weight:700;letter-spacing:1.5px;
+  padding:3px 14px;border-radius:20px;margin-bottom:8px;
+}
+.hdr h1{
+  font-family:'Noto Serif Thai',serif;
+  font-size:clamp(20px,4vw,30px);font-weight:900;line-height:1.3;
+  text-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+.hdr h1 em{
+  font-style:normal;color:#FFF5CC;
+  background:rgba(255,255,255,.15);border-radius:6px;padding:0 5px;
+}
+.hdr-sub{font-size:12px;opacity:.85;margin-top:4px;}
+
+/* ── NAV ── */
+.nav{
+  background:var(--paper);
+  border-bottom:2.5px solid var(--peach-mid);
+  position:sticky;top:0;z-index:200;
+  display:flex;overflow-x:auto;scrollbar-width:none;
+  box-shadow:0 3px 12px rgba(244,162,140,.15);
+  -webkit-overflow-scrolling:touch;
+  scroll-behavior:smooth;
+}
+.nav::-webkit-scrollbar{display:none;}
+/* fade hint on right edge so users know it scrolls */
+.nav-wrap{position:sticky;top:0;z-index:200;}
+.nb{
+  padding:10px 13px;
+  font-family:'Sarabun',sans-serif;
+  font-size:12.5px;font-weight:700;
+  white-space:nowrap;border:none;background:none;cursor:pointer;
+  color:var(--muted);border-bottom:3px solid transparent;
+  transition:all .2s;flex-shrink:0;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  min-height:44px; /* iOS touch target */
+}
+.nb:hover{color:var(--peach-dark);background:var(--peach-pale);}
+.nb.on{color:var(--peach-dark);border-bottom-color:var(--peach);background:var(--peach-pale);}
+
+/* table scroll wrapper — prevents horizontal overflow on small screens */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:8px;}
+
+/* ── PAGE ── */
+.pg{display:none;max-width:1100px;margin:0 auto;padding:16px 14px 60px;}
+.pg.on{display:block;}
+
+/* ── PAGE TITLE ── */
+.pt{
+  font-family:'Noto Serif Thai',serif;
+  font-size:17px;font-weight:900;
+  padding:8px 16px;margin:0 0 14px;
+  background:linear-gradient(90deg,var(--peach-pale),transparent);
+  border-left:5px solid var(--peach);border-radius:0 10px 10px 0;
+  display:flex;align-items:center;gap:8px;
+}
+
+/* ── RESPONSIVE GRID ── */
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:12px;}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;}
+.span2{grid-column:span 2;}
+.span3{grid-column:span 3;}
+
+/* ── LARGE DESKTOP ≥1280px ── */
+@media(min-width:1280px){
+  .pg{max-width:1200px;padding:20px 24px 80px;}
+  body{font-size:14.5px;}
+  .grid2{gap:16px;}
+  .grid3{gap:14px;}
+  .it{font-size:13px;}
+  .it th,.it td{padding:7px 12px;}
+  .blk-bd{padding:12px 16px;}
+  .blk-hd{font-size:13.5px;padding:9px 16px;}
+  .trick-ph{font-size:13.5px;}
+  .nb{padding:12px 16px;font-size:13px;}
+}
+
+/* ── DESKTOP 1024–1279px ── */
+@media(min-width:1024px) and (max-width:1279px){
+  .pg{max-width:1080px;padding:18px 20px 70px;}
+  .grid2{gap:14px;}
+  .nb{padding:11px 14px;font-size:12.5px;}
+}
+
+/* ── TABLET LANDSCAPE 768–1023px ── */
+@media(min-width:768px) and (max-width:1023px){
+  .pg{max-width:100%;padding:14px 16px 64px;}
+  .grid2{grid-template-columns:1fr 1fr;gap:10px;}
+  .grid3{grid-template-columns:1fr 1fr;gap:10px;}
+  .span3{grid-column:span 2;}
+  body{font-size:13.5px;}
+  .nb{padding:10px 12px;font-size:12px;}
+  .blk-hd{font-size:12.5px;}
+  .it{font-size:12px;}
+  .hdr h1{font-size:clamp(18px,3.5vw,26px);}
+  /* 2-col compare on tablet */
+  .c2{grid-template-columns:1fr 1fr;}
+}
+
+/* ── TABLET PORTRAIT 600–767px ── */
+@media(min-width:600px) and (max-width:767px){
+  body{font-size:13px;}
+  .pg{padding:12px 14px 60px;}
+  .hdr{padding:16px 16px 28px;}
+  .grid2{grid-template-columns:1fr 1fr;gap:10px;}
+  .grid3{grid-template-columns:1fr 1fr;gap:8px;}
+  .span2{grid-column:span 2;}
+  .span3{grid-column:span 2;}
+  .nb{padding:9px 11px;font-size:12px;}
+  .blk-hd{font-size:12px;padding:7px 12px;}
+  .blk-bd{padding:9px 12px;}
+  .it{font-size:11.5px;}
+  .it th,.it td{padding:5px 8px;}
+  .flow{flex-wrap:nowrap;}
+  .fs{font-size:11px;}
+  .c2{grid-template-columns:1fr 1fr;}
+}
+
+/* ── MOBILE 400–599px ── */
+@media(min-width:400px) and (max-width:599px){
+  body{font-size:13px;}
+  .pg{padding:10px 10px 60px;}
+  .hdr{padding:14px 14px 26px;}
+  .grid2,.grid3{grid-template-columns:1fr;gap:9px;}
+  .span2,.span3{grid-column:span 1;}
+  .c2{grid-template-columns:1fr;}
+  .flow{flex-wrap:wrap;}
+  .fs{flex:1 0 28%;font-size:10.5px;}
+  .paor{flex-wrap:wrap;}
+  .nb{padding:9px 10px;font-size:11.5px;}
+  .blk-hd{font-size:12px;padding:7px 11px;}
+  .blk-bd{padding:8px 11px;}
+  .it{font-size:11.5px;}
+  .it th,.it td{padding:4px 7px;}
+  .trick-ph{font-size:12px;}
+  .trick{padding:11px 11px 8px;}
+  .pt{font-size:15px;}
+  .hdr h1{font-size:20px;}
+  /* stack number blocks on mobile */
+  [style*="grid-template-columns:repeat(4"]{grid-template-columns:repeat(2,1fr)!important;}
+}
+
+/* ── SMALL MOBILE <400px ── */
+@media(max-width:399px){
+  body{font-size:12.5px;}
+  .pg{padding:8px 8px 60px;}
+  .hdr{padding:12px 12px 24px;}
+  .hdr h1{font-size:17px;}
+  .hdr-brand{font-size:10px;padding:2px 10px;}
+  .grid2,.grid3{grid-template-columns:1fr;gap:8px;}
+  .span2,.span3{grid-column:span 1;}
+  .c2{grid-template-columns:1fr;}
+  .nb{padding:7px 8px;font-size:10.5px;}
+  .blk-hd{font-size:11.5px;padding:6px 10px;}
+  .blk-bd{padding:7px 10px;}
+  .it{font-size:11px;}
+  .it th,.it td{padding:4px 6px;}
+  .trick-ph{font-size:11.5px;padding:5px 10px;}
+  .trick{padding:10px 10px 8px;}
+  .pt{font-size:14px;}
+  .flow{flex-wrap:wrap;}
+  .fs{flex:1 0 28%;font-size:10px;}
+  [style*="grid-template-columns:repeat(4"]{grid-template-columns:repeat(2,1fr)!important;}
+  [style*="grid-template-columns:1fr 1fr 1fr"]{grid-template-columns:1fr 1fr!important;}
+}
+
+/* ── PRINT ── */
+@media print{
+  .nav{display:none;}
+  .pg{display:block!important;padding:10px;}
+  .hdr::after{display:none;}
+  body{font-size:11px;}
+  .blk{break-inside:avoid;box-shadow:none;}
+}
+
+/* ── BLOCK ── */
+.blk{
+  background:var(--paper);
+  border-radius:14px;border:1.5px solid var(--border);
+  overflow:hidden;
+  box-shadow:0 2px 8px rgba(244,162,140,.09);
+  break-inside:avoid;
+}
+.blk-hd{
+  padding:8px 14px;font-weight:800;font-size:13px;
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+}
+.blk-hd .num{
+  width:22px;height:22px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:900;color:#fff;
+  box-shadow:0 2px 4px rgba(0,0,0,.15);
+}
+.blk-bd{padding:10px 14px;}
+
+/* color themes */
+.th-peach .blk-hd{background:var(--peach-pale);border-bottom:1.5px solid var(--peach-mid);}
+.th-peach .num{background:linear-gradient(135deg,var(--peach),var(--peach-dark));}
+.th-mint  .blk-hd{background:var(--mint-pale);border-bottom:1.5px solid var(--mint-mid);}
+.th-mint  .num{background:linear-gradient(135deg,var(--mint),var(--mint-dark));}
+.th-lav   .blk-hd{background:var(--lav-pale);border-bottom:1.5px solid var(--lav-mid);}
+.th-lav   .num{background:linear-gradient(135deg,var(--lav),var(--lav-dark));}
+.th-sky   .blk-hd{background:var(--sky-pale);border-bottom:1.5px solid var(--sky-mid);}
+.th-sky   .num{background:linear-gradient(135deg,var(--sky),var(--sky-dark));}
+.th-yell  .blk-hd{background:var(--yell-pale);border-bottom:1.5px solid var(--yell-mid);}
+.th-yell  .num{background:linear-gradient(135deg,var(--yell),var(--yell-dark));color:#3D2C2C;}
+.th-rose  .blk-hd{background:var(--rose-pale);border-bottom:1.5px solid var(--rose-mid);}
+.th-rose  .num{background:linear-gradient(135deg,var(--rose),var(--rose-dark));}
+.th-sage  .blk-hd{background:var(--sage-pale);border-bottom:1.5px solid var(--sage-mid);}
+.th-sage  .num{background:linear-gradient(135deg,var(--sage),var(--sage-dark));}
+.th-teal  .blk-hd{background:var(--mint-pale);border-bottom:1.5px solid var(--mint-mid);}
+.th-teal  .num{background:linear-gradient(135deg,var(--mint),var(--mint-dark));}
+
+/* ── TAGS ── */
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin:4px 0;}
+.tag{padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;border:1.5px solid;}
+.tg-p{background:var(--peach-pale);color:var(--peach-dark);border-color:var(--peach-mid);}
+.tg-m{background:var(--mint-pale); color:var(--mint-dark); border-color:var(--mint-mid);}
+.tg-l{background:var(--lav-pale);  color:var(--lav-dark);  border-color:var(--lav-mid);}
+.tg-s{background:var(--sky-pale);  color:var(--sky-dark);  border-color:var(--sky-mid);}
+.tg-y{background:var(--yell-pale); color:var(--yell-dark); border-color:var(--yell-mid);}
+.tg-r{background:var(--rose-pale); color:var(--rose-dark); border-color:var(--rose-mid);}
+.tg-g{background:var(--sage-pale); color:var(--sage-dark); border-color:var(--sage-mid);}
+.tg-t{background:var(--mint-pale); color:var(--mint-dark); border-color:var(--mint-mid);}
+.hot {background:linear-gradient(90deg,#F4A28C,#E8607A);color:#fff;border-color:transparent;}
+
+/* old tag shorthand aliases */
+.gp{background:var(--peach-pale);color:var(--peach-dark);border:1.5px solid var(--peach-mid);}
+.gm{background:var(--mint-pale); color:var(--mint-dark); border:1.5px solid var(--mint-mid);}
+.gl{background:var(--lav-pale);  color:var(--lav-dark);  border:1.5px solid var(--lav-mid);}
+.gs{background:var(--sky-pale);  color:var(--sky-dark);  border:1.5px solid var(--sky-mid);}
+.gy{background:var(--yell-pale); color:var(--yell-dark); border:1.5px solid var(--yell-mid);}
+.gr{background:var(--rose-pale); color:var(--rose-dark); border:1.5px solid var(--rose-mid);}
+.gg{background:var(--sage-pale); color:var(--sage-dark); border:1.5px solid var(--sage-mid);}
+
+/* ── TABLE ── */
+.it{width:100%;border-collapse:collapse;font-size:12.5px;margin:6px 0;}
+.it th{padding:6px 10px;text-align:left;font-weight:700;font-size:12px;color:#fff;}
+.it td{padding:6px 10px;border-bottom:1px solid var(--border);vertical-align:top;}
+.it tr:last-child td{border-bottom:none;}
+.it tr:nth-child(even) td{background:rgba(244,162,140,.04);}
+/* table overflow on mobile */
+.it-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.th-peach .it th{background:var(--peach-dark);}
+.th-mint  .it th{background:var(--mint-dark);}
+.th-lav   .it th{background:var(--lav-dark);}
+.th-sky   .it th{background:var(--sky-dark);}
+.th-yell  .it th{background:var(--yell-dark);color:#3D2C2C;}
+.th-rose  .it th{background:var(--rose-dark);}
+.th-sage  .it th,.th-teal .it th{background:var(--sage-dark);}
+
+/* ── NUMBERED LIST ── */
+.nl{list-style:none;counter-reset:n;}
+.nl li{counter-increment:n;padding:5px 0 5px 28px;position:relative;font-size:13px;border-bottom:1px dashed var(--border);}
+.nl li:last-child{border-bottom:none;}
+.nl li::before{
+  content:counter(n);position:absolute;left:0;top:6px;
+  width:19px;height:19px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:900;color:#fff;
+  background:linear-gradient(135deg,var(--peach),var(--peach-dark));
+}
+.th-mint  .nl li::before,.th-teal .nl li::before{background:linear-gradient(135deg,var(--mint),var(--mint-dark));}
+.th-lav   .nl li::before{background:linear-gradient(135deg,var(--lav),var(--lav-dark));}
+.th-sky   .nl li::before{background:linear-gradient(135deg,var(--sky),var(--sky-dark));}
+.th-rose  .nl li::before{background:linear-gradient(135deg,var(--rose),var(--rose-dark));}
+.th-sage  .nl li::before{background:linear-gradient(135deg,var(--sage),var(--sage-dark));}
+
+/* ── FLOW BAR ── */
+.flow{display:flex;gap:2px;margin:6px 0;border-radius:10px;overflow:hidden;border:1px solid var(--border);}
+.fs{flex:1;padding:7px 4px;text-align:center;font-size:11.5px;font-weight:700;min-width:0;}
+.fs small{display:block;font-size:10px;font-weight:400;margin-top:1px;}
+.f1{background:#FFEEF2;color:#C04060;} .f2{background:#EDFAF5;color:#2A9060;}
+.f3{background:#FFFBEA;color:#A07010;} .f4{background:#F5F0FF;color:#6040A0;}
+.f5{background:#EEF6FF;color:#2050A0;} .f6{background:#F0FAF0;color:#308030;}
+.f7{background:#FFF5EA;color:#A05020;} .f8{background:#FFF0F8;color:#A03060;}
+@media(max-width:767px){
+  .flow{flex-wrap:wrap;}
+  .fs{flex:1 0 calc(33% - 4px);}
+}
+
+/* ── TRICK BOX ── */
+.trick{
+  background:linear-gradient(135deg,var(--peach-pale),var(--lav-pale));
+  border:2px dashed var(--peach);border-radius:12px;
+  padding:14px 14px 10px;margin:8px 0 0;position:relative;
+}
+.trick::before{
+  content:'💡 ทริคจำ';
+  position:absolute;top:-11px;left:14px;
+  background:linear-gradient(90deg,var(--peach),var(--peach-dark));
+  color:#fff;font-size:10.5px;font-weight:800;
+  padding:2px 11px;border-radius:20px;
+  box-shadow:0 2px 6px rgba(244,162,140,.4);
+}
+.trick-ph{
+  background:rgba(255,255,255,.75);border:1.5px solid var(--peach-mid);
+  border-radius:8px;padding:7px 12px;margin:7px 0 0;
+  color:var(--peach-dark);font-weight:800;font-size:13px;
+  text-align:center;
+}
+.tkey{
+  display:inline-block;
+  background:linear-gradient(90deg,var(--peach),var(--peach-dark));
+  color:#fff;font-weight:800;font-size:11.5px;
+  padding:1px 9px;border-radius:20px;margin:2px 2px;
+}
+.trick-n{font-size:11.5px;color:var(--ink2);margin-top:5px;font-style:italic;border-top:1px dashed var(--peach-mid);padding-top:5px;}
+
+/* ── STRIP ── */
+.strip{
+  background:linear-gradient(135deg,var(--peach),var(--lav-dark));
+  color:#fff;border-radius:10px;padding:10px 14px;font-size:13px;margin:6px 0;
+}
+.strip strong{color:#FFF5CC;}
+
+/* ── PAOR ── */
+.paor{display:flex;gap:6px;margin:8px 0;flex-wrap:wrap;}
+.ps{
+  flex:1;min-width:65px;border-radius:12px;
+  padding:10px 6px;text-align:center;font-weight:800;font-size:14px;
+  border:1.5px solid rgba(255,255,255,.4);
+  box-shadow:0 2px 6px rgba(0,0,0,.08);
+}
+.ps small{display:block;font-size:11px;font-weight:400;margin-top:3px;}
+
+/* ── KV ── */
+.kv{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:12.5px;}
+.kv dt{font-weight:700;color:var(--mint-dark);white-space:nowrap;}
+.kv dd{color:var(--ink2);}
+@media(max-width:400px){
+  .kv{grid-template-columns:1fr;}
+  .kv dt{margin-top:4px;}
+}
+
+/* ── FORMULA ── */
+.form{
+  background:linear-gradient(135deg,#3D2C2C,#5A3C3C);
+  color:#FFF5CC;font-family:monospace;font-size:13px;
+  border-radius:8px;padding:7px 14px;margin:5px 0;
+  text-align:center;font-weight:700;border:1.5px solid var(--peach-mid);
+  overflow-x:auto;
+}
+
+/* ── CONE ── */
+.cone>div{text-align:center;padding:6px 8px;font-size:11.5px;font-weight:700;}
+
+/* ── CMP GRID ── */
+.cmp2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0;}
+.cb{border-radius:10px;padding:10px 12px;font-size:12.5px;border:1.5px solid var(--border);}
+.cb-t,.ct{font-weight:800;font-size:12px;margin-bottom:4px;}
+@media(max-width:767px){.cmp2{grid-template-columns:1fr;}}
+
+/* ── FOOTER ── */
+footer{
+  text-align:center;
+  padding:22px 20px calc(28px + env(safe-area-inset-bottom,0));
+  font-size:12px;color:var(--muted);
+  border-top:2px dashed var(--peach-mid);background:var(--paper);
+}
+footer strong{color:var(--peach-dark);}
+
+/* safe-area nav top */
+.nav{padding-left:env(safe-area-inset-left,0);padding-right:env(safe-area-inset-right,0);}
+
+/* ── SCROLL TO TOP button ── */
+#totop{
+  position:fixed;bottom:20px;right:16px;z-index:300;
+  width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;
+  background:linear-gradient(135deg,var(--peach),var(--peach-dark));
+  color:#fff;font-size:18px;line-height:42px;text-align:center;
+  box-shadow:0 3px 12px rgba(244,162,140,.5);
+  display:none;transition:opacity .3s;
+  -webkit-tap-highlight-color:transparent;
+}
+#totop.show{display:block;}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-brand">🐹 อีหล่าอ่านหนังสือ · READ EAT REST</div>
+  <h1>ชีทดูหน้าห้องสอบ 🎀<br><em>ครูผู้ช่วย ภาค ก + ภาค ข</em></h1>
+  <div class="hdr-sub">ดูปุ๊ป จำปั๊ป สอบผ่าน 🌸 รวมทุกจุดออกสอบ</div>
+</div>
+
+<nav class="nav">
+  <button class="nb on" onclick="go('p1',this)">⚖️ กฎหมาย</button>
+  <button class="nb" onclick="go('p2',this)">🏅 จรรยาบรรณ</button>
+  <button class="nb" onclick="go('p3',this)">🧠 จิตวิทยา</button>
+  <button class="nb" onclick="go('p4',this)">📖 หลักสูตร</button>
+  <button class="nb" onclick="go('p5',this)">📊 วัดผล</button>
+  <button class="nb" onclick="go('p6',this)">🔬 วิจัย</button>
+  <button class="nb" onclick="go('p7',this)">💻 สื่อ/เทคโน</button>
+  <button class="nb" onclick="go('p8',this)">🗂️ ชุดเน้น</button>
+  <button class="nb" onclick="go('p9',this)">➕ ภาค ก เพิ่ม</button>
+  <button class="nb" onclick="go('p10',this)">➕ ภาค ข เพิ่ม</button>
+</nav>
+
+<!-- ════════════════════════════════
+     PAGE 1 · กฎหมาย
+════════════════════════════════ -->
+<div id="p1" class="pg on">
+<div class="pt"><span>⚖️</span> กฎหมายการศึกษา</div>
+
+<div class="grid2">
+
+  <!-- พ.ร.บ.การศึกษา 2542 -->
+  <div class="blk th-yell">
+    <div class="blk-hd"><div class="num">1</div> พ.ร.บ.การศึกษาแห่งชาติ 2542</div>
+    <div class="blk-bd">
+      <div class="tags">
+        <span class="tag tg-r">HOT 🔥</span>
+        <span class="tag tg-y">มาตรา 8, 10, 22</span>
+      </div>
+      <table class="it"><thead><tr><th>มาตรา</th><th>ใจความ</th></tr></thead>
+      <tbody>
+        <tr><td><b>ม.8</b></td><td>หลักการ 3 ข้อ: ตลอดชีวิต · สังคมร่วม · พัฒนาต่อ</td></tr>
+        <tr><td><b>ม.10</b></td><td>สิทธิเสมอกัน 12 ปี ฟรี</td></tr>
+        <tr><td><b>ม.22</b></td><td>ผู้เรียนสำคัญที่สุด เรียนรู้ตามศักยภาพ</td></tr>
+      </tbody></table>
+      <table class="it" style="margin-top:6px;"><thead><tr><th colspan="2">ระบบการศึกษา 3 รูปแบบ</th></tr></thead>
+      <tbody>
+        <tr><td><b>ในระบบ</b></td><td>โรงเรียน มหาวิทยาลัย</td></tr>
+        <tr><td><b>นอกระบบ</b></td><td>กศน. อาชีวะระยะสั้น</td></tr>
+        <tr><td><b>ตามอัธยาศัย</b></td><td>พิพิธภัณฑ์ ห้องสมุด</td></tr>
+      </tbody></table>
+      <div class="trick">
+        <div class="trick-ph">"ตลอดชีวิต — สังคมร่วม — พัฒนาต่อ"</div>
+        <div class="trick-n">ม.8 = 3 หลักการ · ม.22 = ผู้เรียนเป็นศูนย์กลาง</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- พ.ร.บ.ครู 2547 -->
+  <div class="blk th-rose">
+    <div class="blk-hd"><div class="num">2</div> พ.ร.บ.ระเบียบข้าราชการครู 2547</div>
+    <div class="blk-bd">
+      <div class="tags"><span class="tag tg-r">HOT 🔥</span><span class="tag tg-p">วินัย / โทษ</span></div>
+      <table class="it"><thead><tr><th>โทษ 5 สถาน (เบา→หนัก)</th></tr></thead>
+      <tbody>
+        <tr><td>1. ภาคทัณฑ์ → 2. ตัดเงินเดือน → 3. ลดขั้น → 4. ปลดออก → 5. ไล่ออก</td></tr>
+      </tbody></table>
+      <dl class="kv" style="margin-top:6px;">
+        <dt>วินัยร้ายแรง</dt><dd>ทุจริต · ละทิ้งเกิน 15 วัน · ดูหมิ่นสถาบัน</dd>
+        <dt>ครูผู้ช่วย</dt><dd>เตรียมพร้อม 2 ปี → บรรจุ คศ.1</dd>
+        <dt>เกษียณ</dt><dd>อายุ 60 ปี</dd>
+      </dl>
+      <div class="trick">
+        <div class="trick-ph">"ภาคทัณฑ์ ตัด ลด ปลด ไล่"</div>
+        <div class="trick-n">ไล่ออก = ไม่ได้บำนาญ | ปลดออก = ยังได้บำนาญ</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- พ.ร.บ.สภาครู 2546 -->
+  <div class="blk th-sky">
+    <div class="blk-hd"><div class="num">3</div> พ.ร.บ.สภาครูและบุคลากรทางการศึกษา 2546</div>
+    <div class="blk-bd">
+      <div class="tags"><span class="tag tg-r">HOT 🔥</span><span class="tag tg-s">ใบอนุญาต</span></div>
+      <dl class="kv">
+        <dt>อายุใบอนุญาต</dt><dd><b>5 ปี</b> ต่ออายุก่อนหมด <b>180 วัน (6 เดือน)</b></dd>
+        <dt>วิชาชีพควบคุม</dt><dd>ครู · ผู้บริหาร · ศึกษานิเทศก์ · ผู้บริหารสถานศึกษา</dd>
+      </dl>
+      <div class="trick">
+        <div class="trick-ph">"5 ปี — ต่อก่อน 6 เดือน"</div>
+        <div class="trick-n">วิชาชีพควบคุม 4 ประเภท จำให้ครบ</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- แผนชาติ + รัฐธรรมนูญ -->
+  <div class="blk th-mint">
+    <div class="blk-hd"><div class="num">4</div> รัฐธรรมนูญ 2560 + แผนการศึกษาแห่งชาติ 2560–2579</div>
+    <div class="blk-bd">
+      <div class="tags"><span class="tag tg-r">HOT 🔥</span></div>
+      <dl class="kv">
+        <dt>ม.54</dt><dd>รัฐจัด 12 ปีฟรี พัฒนาครูให้มีจิตวิญญาณ</dd>
+        <dt>4 เป้าหมายแผนชาติ</dt><dd>เข้าถึง · คุณภาพ · ประสิทธิภาพ · ตอบโจทย์</dd>
+        <dt>6 ยุทธศาสตร์</dt><dd>โอกาส · คุณภาพ · สร้างขีดความสามารถ · ครู · คุณภาพชีวิต · ดิจิทัล</dd>
+      </dl>
+    </div>
+  </div>
+
+  <!-- พ.ร.บ.คุ้มครองเด็ก -->
+  <div class="blk th-sage span2">
+    <div class="blk-hd"><div class="num">5</div> พ.ร.บ.คุ้มครองเด็ก 2546 + พ.ร.บ.ระเบียบบริหารราชการกระทรวงศึกษา 2546</div>
+    <div class="blk-bd">
+      <div class="grid2" style="gap:10px;">
+        <div>
+          <b style="color:var(--sage-d)">คุ้มครองเด็ก — ห้ามทำ:</b>
+          <div class="tags" style="margin-top:5px;">
+            <span class="tag tg-g">ทอดทิ้ง</span><span class="tag tg-g">ทารุณกรรม</span>
+            <span class="tag tg-g">ใช้แรงงานอันตราย</span><span class="tag tg-g">ล่วงละเมิดทางเพศ</span>
+          </div>
+        </div>
+        <div>
+          <b style="color:var(--sage-d)">โครงสร้างกระทรวงฯ:</b>
+          <div class="tags" style="margin-top:5px;">
+            <span class="tag tg-g">สพฐ.</span><span class="tag tg-g">สพป. (ประถม)</span>
+            <span class="tag tg-g">สพม. (มัธยม)</span><span class="tag tg-g">สกสค. (สวัสดิการครู)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="blk th-teal span2">
+    <div class="blk-hd"><div class="num">5</div> รัฐธรรมนูญ 2560 + แผนการศึกษาแห่งชาติ 2560–2579 + พ.ร.บ.คุ้มครองเด็ก 2546</div>
+    <div class="blk-bd">
+      <div class="grid2" style="gap:8px;">
+        <div>
+          <b style="color:var(--mint-d);font-size:12px;">รัฐธรรมนูญ 2560:</b>
+          <table class="it" style="margin-top:4px;"><tbody>
+            <tr><td><b>ม.54</b></td><td>รัฐจัด 12 ปีฟรีมีคุณภาพ พัฒนาครูให้มีจิตวิญญาณ</td></tr>
+            <tr><td><b>ม.55</b></td><td>รัฐจัดการศึกษาก่อนวัยเรียน</td></tr>
+          </tbody></table>
+          <b style="color:var(--mint-d);font-size:12px;display:block;margin-top:6px;">แผนการศึกษาแห่งชาติ 2560–2579:</b>
+          <div class="tags" style="margin-top:4px;">
+            <span class="tag tg-t">4 เป้าหมาย: เข้าถึง · คุณภาพ · ประสิทธิภาพ · ตอบโจทย์</span>
+          </div>
+          <div class="tags">
+            <span class="tag tg-t">6 ยุทธศาสตร์: โอกาส · คุณภาพ · ขีดความสามารถ · ครู · คุณภาพชีวิต · ดิจิทัล</span>
+          </div>
+        </div>
+        <div>
+          <b style="color:var(--mint-d);font-size:12px;">พ.ร.บ.คุ้มครองเด็ก 2546 — ห้ามทำต่อเด็ก:</b>
+          <div class="tags" style="margin-top:4px;">
+            <span class="tag tg-t">ทอดทิ้ง</span><span class="tag tg-t">ทารุณกรรม</span>
+            <span class="tag tg-t">ใช้แรงงานอันตราย</span><span class="tag tg-t">ล่วงละเมิดทางเพศ</span>
+            <span class="tag tg-t">ลงโทษวิธีทารุณ</span>
+          </div>
+          <b style="color:var(--mint-d);font-size:12px;display:block;margin-top:6px;">โครงสร้างกระทรวงฯ:</b>
+          <div class="tags" style="margin-top:4px;">
+            <span class="tag tg-t">สพฐ. — บริหารการศึกษาขั้นพื้นฐาน</span>
+            <span class="tag tg-t">สพป. — ประถม</span>
+            <span class="tag tg-t">สพม. — มัธยม</span>
+            <span class="tag tg-t">สกสค. — สวัสดิการครู</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end grid2 -->
+</div><!-- end p1 -->
+════════════════════════════════ -->
+<div id="p2" class="pg">
+<div class="pt"><span>🏅</span> จรรยาบรรณวิชาชีพและมาตรฐาน</div>
+
+<div class="grid2">
+
+  <!-- จรรยาบรรณ 9 ข้อ -->
+  <div class="blk th-peach">
+    <div class="blk-hd"><div class="num">⭐</div> จรรยาบรรณวิชาชีพครู 9 ข้อ 5 หมวด</div>
+    <div class="blk-bd">
+      <div class="tags"><span class="tag tg-r">HOT 🔥</span><span class="tag tg-p">ออกสอบแน่</span></div>
+      <table class="it"><thead><tr><th>#</th><th>ต่อ</th><th>ใจความ</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><b>ตนเอง</b></td><td>จิตวิญญาณครู พัฒนาตนเสมอ</td></tr>
+        <tr><td>2</td><td><b>วิชาชีพ</b></td><td>รักษาชื่อเสียง ยกย่องวิชาชีพ</td></tr>
+        <tr><td>3</td><td><b>ผู้เรียน</b></td><td>เมตตา ไม่แสวงหาประโยชน์</td></tr>
+        <tr><td>4</td><td><b>ผู้ปกครอง</b></td><td>ให้ข้อมูลจริง ไม่หาประโยชน์</td></tr>
+        <tr><td>5–6</td><td><b>เพื่อนร่วมวิชาชีพ</b></td><td>ช่วยเหลือ สามัคคี ไม่ดูหมิ่น</td></tr>
+        <tr><td>7–9</td><td><b>สังคม (×3)</b></td><td>รับผิดชอบ · อนุรักษ์วัฒนธรรม · อนุรักษ์ธรรมชาติ</td></tr>
+      </tbody></table>
+      <div class="trick">
+        <div class="trick-ph">"ตน วิชา เด็ก ผู้ปก เพื่อน(2) สังคม(3)"</div>
+        <div class="trick-n">นับนิ้ว: 1+1+1+1+2+3 = 9 ข้อ ✓</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- มาตรฐาน 12 ข้อ -->
+  <div class="blk th-mint">
+    <div class="blk-hd"><div class="num">⭐</div> มาตรฐานการปฏิบัติงาน 12 มาตรฐาน</div>
+    <div class="blk-bd">
+      <div class="tags"><span class="tag tg-r">HOT 🔥</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
+        <div>
+          <div style="background:var(--mint-p);border-radius:8px;padding:7px 10px;margin-bottom:6px;font-size:12px;">
+            <b style="color:var(--mint-d)">กลุ่ม 1 — รู้ผู้เรียน</b><br>
+            1.รู้จักผู้เรียน 2.เน้นผู้เรียน 3.บรรยากาศ 4.สื่อ 5.วัดผล
+          </div>
+          <div style="background:var(--sky-p);border-radius:8px;padding:7px 10px;font-size:12px;">
+            <b style="color:var(--sky-d)">กลุ่ม 2 — พัฒนาตน</b><br>
+            6.ศึกษาค้นคว้า 7.วิจัย 8.เป็นแบบอย่าง
+          </div>
+        </div>
+        <div style="padding-left:6px;">
+          <div style="background:var(--lav-p);border-radius:8px;padding:7px 10px;font-size:12px;height:100%;">
+            <b style="color:var(--lav-d)">กลุ่ม 3 — ชุมชน/หลักสูตร</b><br>
+            9.ร่วมมือชุมชน 10.สร้างหลักสูตร 11.พัฒนาแผนสอน 12.ส่งเสริมภูมิปัญญา
+          </div>
+        </div>
+      </div>
+      <div class="trick">
+        <div class="trick-ph">"รู้เขา(5) — รู้เรา(3) — รู้สังคม(4) = 12"</div>
+        <div class="trick-n">จำ 3 กลุ่ม แล้วนับ 5+3+4 = 12 ✓</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ════════════════════════════════
+     PAGE 3 · จิตวิทยา
+════════════════════════════════ -->
+<div id="p3" class="pg">
+<div class="pt"><span>🧠</span> จิตวิทยาการศึกษาและพัฒนาการ</div>
+
+<div class="grid2">
+
+  <!-- Bloom -->
+  <div class="blk th-yell">
+    <div class="blk-hd"><div class="num">⭐</div> Bloom's Taxonomy — 6 ระดับ</div>
+    <div class="blk-bd">
+      <div class="tags"><span class="tag tg-r">HOT 🔥</span><span class="tag tg-y">ออกสอบแน่</span></div>
+      <div class="flow">
+        <div class="fs f1">1.จำ<small>Remember</small></div>
+        <div class="fs f2">2.เข้าใจ<small>Understand</small></div>
+        <div class="fs f3">3.ประยุกต์<small>Apply</small></div>
+        <div class="fs f4">4.วิเคราะห์<small>Analyze</small></div>
+        <div class="fs f5">5.ประเมิน<small>Evaluate</small></div>
+        <div class="fs f6">6.สร้าง<small>Create</small></div>
+      </div>
+      <table class="it" style="margin-top:6px;"><thead><tr><th>ระดับ</th><th>คำกริยาในโจทย์</th></tr></thead>
+      <tbody>
+        <tr><td>จำ</td><td>บอก ระบุ ชี้ จำแนก เรียกชื่อ</td></tr>
+        <tr><td>เข้าใจ</td><td>อธิบาย สรุป แปลความ ยกตัวอย่าง</td></tr>
+        <tr><td>ประยุกต์</td><td>ใช้ แก้ปัญหา คำนวณ สาธิต</td></tr>
+        <tr><td>วิเคราะห์</td><td>แยกแยะ เปรียบเทียบ จำแนก</td></tr>
+        <tr><td>ประเมิน</td><td>ตัดสิน วิจารณ์ เลือก</td></tr>
+        <tr><td>สร้าง</td><td>ออกแบบ สร้าง ผลิต วางแผน</td></tr>
+      </tbody></table>
+      <div class="trick">
+        <div class="trick-ph">"จำได้ เข้าใจ ใช้เป็น แยกได้ ตัดสิน สร้างเอง"</div>
+        <div class="trick-n">3 พิสัย: พุทธิ(6ระดับ) · จิต(5ระดับ) · ทักษะ</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Piaget -->
+  <div class="blk th-mint">
+    <div class="blk-hd"><div class="num">⭐</div> Piaget — พัฒนาการทางปัญญา 4 ขั้น</div>
+    <div class="blk-bd">
+      <div class="tags"><span class="tag tg-r">HOT 🔥</span></div>
+      <table class="it"><thead><tr><th>ขั้น</th><th>อายุ</th><th>จุดสำคัญ</th></tr></thead>
+      <tbody>
+        <tr><td><b>Sensori</b></td><td>0–2</td><td>ประสาทสัมผัส, Object permanence</td></tr>
+        <tr><td><b>Pre-op</b></td><td>2–7</td><td>ใช้ภาษาได้ แต่ Egocentrism</td></tr>
+        <tr><td><b>Concrete</b></td><td>7–11</td><td>รูปธรรม Conservation</td></tr>
+        <tr><td><b>Formal</b></td><td>11+</td><td>นามธรรม ตรรกะ สมมติฐาน</td></tr>
+      </tbody></table>
+      <div class="tags" style="margin-top:6px;">
+        <span class="tag tg-m">Assimilation = ดูด</span>
+        <span class="tag tg-m">Accommodation = ปรับ</span>
+        <span class="tag tg-m">Schema = กรอบความรู้</span>
+      </div>
+      <div class="trick">
+        <div class="trick-ph">"ตัวเล็กสัมผัส → พูดได้ → รูปธรรม → นามธรรม"</div>
+        <div class="trick-n">ดูด = ยัดใส่กรอบเดิม | ปรับ = สร้างกรอบใหม่</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vygotsky -->
+  <div class="blk th-lav">
+    <div class="blk-hd"><div class="num">⭐</div> Vygotsky — ZPD & Scaffolding</div>
+    <div class="blk-bd">
+      <div class="tags"><span class="tag tg-r">HOT 🔥</span></div>
+      <div class="cmp2">
+        <div class="cb" style="background:var(--lav-p);border-color:var(--lav-m);">
+          <div class="cb-t" style="color:var(--lav-d)">ZPD</div>
+          ช่องว่างระหว่าง "ทำเองได้" กับ "ทำได้เมื่อมีคนช่วย"<br>
+          <b>ครูต้องสอนใน ZPD</b>
+        </div>
+        <div class="cb" style="background:var(--sky-p);border-color:var(--sky-m);">
+          <div class="cb-t" style="color:var(--sky-d)">Scaffolding</div>
+          ช่วยแล้วค่อยๆ ถอน<br>คำถามนำ → ตัวอย่าง → ลดความช่วยเหลือ
+        </div>
+      </div>
+      <div class="trick">
+        <div class="trick-ph">Piaget = เรียนคนเดียว · Vygotsky = เรียนกับคนอื่น</div>
+        <div class="trick-n">โจทย์ "ครูช่วยแล้วค่อยถอน" = Scaffolding</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ทฤษฎีรวม -->
+  <div class="blk th-sage">
+    <div class="blk-hd"><div class="num">4</div> ทฤษฎีรวม — จำชื่อ+คีย์เวิร์ด</div>
+    <div class="blk-bd">
+      <table class="it"><thead><tr><th>ชื่อ</th><th>คีย์เวิร์ด</th></tr></thead>
+      <tbody>
+        <tr><td><b>Maslow</b></td><td>5 ขั้น: กาย→ปลอดภัย→สังคม→เกียรติ→บรรลุตน</td></tr>
+        <tr><td><b>Bandura</b></td><td>ดู+เลียนแบบ (Modeling) · Self-efficacy</td></tr>
+        <tr><td><b>Bruner</b></td><td>Discovery · Spiral Curriculum</td></tr>
+        <tr><td><b>Skinner</b></td><td>เสริมแรง(+/-)→เพิ่มพฤติกรรม · ลงโทษ→ลด</td></tr>
+        <tr><td><b>Pavlov</b></td><td>US→UR · CS+US→CR (มีเงื่อนไข)</td></tr>
+        <tr><td><b>Erikson</b></td><td>8 ขั้น · วัยเรียน=ขยัน vs ด้อย · วัยรุ่น=อัตลักษณ์</td></tr>
+      </tbody></table>
+      <div class="trick">
+        <div class="trick-ph">"มาสัมผัสพฤติกรรม" = Maslow·Bandura·Bruner·Erikson·Skinner·Pavlov</div>
+        <div class="trick-n">Maslow: ตอบสนองล่างก่อนเสมอ · เด็กหิว = สอนไม่เข้า</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ════════════════════════════════
+     PAGE 4 · หลักสูตร
+════════════════════════════════ -->
+<div id="p4" class="pg">
+<div class="pt"><span>📖</span> หลักสูตรและการจัดการเรียนรู้</div>
+
+<div class="grid2">
+
+  <!-- หลักสูตรแกนกลาง -->
+  <div class="blk th-peach">
+    <div class="blk-hd"><div class="num">⭐</div> หลักสูตรแกนกลาง 2551 (ปรับปรุง 2560)</div>
+    <div class="blk-bd">
+      <div class="tags"><span class="tag tg-r">HOT 🔥</span></div>
+      <b style="font-size:12.5px;color:var(--peach-d)">สมรรถนะ 5 (สื่อ-คิด-แก้-ชีวิต-เทค):</b>
+      <div class="tags" style="margin:4px 0 8px;">
+        <span class="tag tg-p">สื่อสาร</span>
+        <span class="tag tg-p">คิด</span>
+        <span class="tag tg-p">แก้ปัญหา</span>
+        <span class="tag tg-p">ทักษะชีวิต</span>
+        <span class="tag tg-p">เทคโนโลยี</span>
+      </div>
+      <b style="font-size:12.5px;color:var(--peach-d)">คุณลักษณะ 8 (รัก-ซื่อ-วินัย-ใฝ่-พอ-มุ่ง-ไทย-สาธา):</b>
+      <div class="tags" style="margin:4px 0;">
+        <span class="tag tg-y">รักชาติ ศาสน์ กษัตริย์</span>
+        <span class="tag tg-y">ซื่อสัตย์</span>
+        <span class="tag tg-y">วินัย</span>
+        <span class="tag tg-y">ใฝ่เรียนรู้</span>
+        <span class="tag tg-y">พอเพียง</span>
+        <span class="tag tg-y">มุ่งมั่น</span>
+        <span class="tag tg-y">รักไทย</span>
+        <span class="tag tg-y">จิตสาธารณะ</span>
+      </div>
+      <div class="trick">
+        <div class="trick-ph">"สื่อ คิด แก้ ชีวิต เทค" + "รัก ซื่อ วินัย ใฝ่ พอ มุ่ง ไทย สาธา"</div>
+        <div class="trick-n">โจทย์ "ข้อใดไม่ใช่สมรรถนะ/คุณลักษณะ" = จำทั้งสองชุดให้ขึ้นใจ</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Backward Design + Active Learning -->
+  <div class="blk th-sky">
+    <div class="blk-hd"><div class="num">⭐</div> Backward Design + รูปแบบการสอนสมัยใหม่</div>
+    <div class="blk-bd">
+      <div class="tags"><span class="tag tg-r">HOT 🔥</span></div>
+      <div class="flow" style="margin-bottom:8px;">
+        <div class="fs f1">ขั้น 1<small>เป้าหมาย<br>Desired</small></div>
+        <div class="fs f3">ขั้น 2<small>หลักฐาน<br>Evidence</small></div>
+        <div class="fs f5">ขั้น 3<small>กิจกรรม<br>Learning</small></div>
+      </div>
+      <div class="trick" style="margin-bottom:8px;">
+        <div class="trick-ph">"อยากได้อะไร? → รู้ได้ยังไง? → สอนยังไง?"</div>
+        <div class="trick-n">ออกแบบ "ย้อนกลับ" = เป้าก่อน กิจกรรมหลังสุด</div>
+      </div>
+      <table class="it"><thead><tr><th>รูปแบบ</th><th>จุดเด่น</th></tr></thead>
+      <tbody>
+        <tr><td><b>Active Learning</b></td><td>ผู้เรียนลงมือทำ ครูอำนวย</td></tr>
+        <tr><td><b>PBL</b></td><td>โครงงาน แก้ปัญหาจริง</td></tr>
+        <tr><td><b>Flipped</b></td><td>ดูคลิปที่บ้าน ทำงานในห้อง</td></tr>
+        <tr><td><b>Inquiry</b></td><td>ตั้งคำถาม → สืบสวน → สรุป</td></tr>
+        <tr><td><b>STEM</b></td><td>Science+Tech+Eng+Math บูรณาการ</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ════════════════════════════════
+     PAGE 5 · วัดผล
+════════════════════════════════ -->
+<div id="p5" class="pg">
+<div class="pt"><span>📊</span> การวัดและประเมินผล</div>
+
+<div class="grid2">
+
+  <!-- ประเภทการประเมิน -->
+  <div class="blk th-rose">
+    <div class="blk-hd"><div class="num">⭐</div> ประเภทการประเมิน</div>
+    <div class="blk-bd">
+      <div class="tags"><span class="tag tg-r">HOT 🔥</span></div>
+      <table class="it"><thead><tr><th>ประเภท</th><th>ช่วงเวลา</th><th>เครื่องมือ</th></tr></thead>
+      <tbody>
+        <tr><td><b>Diagnostic</b></td><td>ก่อนสอน</td><td>Pre-test</td></tr>
+        <tr><td><b>Formative</b></td><td>ระหว่างเรียน</td><td>Quiz ถามตอบ</td></tr>
+        <tr><td><b>Summative</b></td><td>ปลายภาค</td><td>ข้อสอบ Final</td></tr>
+        <tr><td><b>Authentic</b></td><td>ตลอดเวลา</td><td>Portfolio Rubric</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <!-- Validity Reliability -->
+  <div class="blk th-yell">
+    <div class="blk-hd"><div class="num">⭐</div> Validity · Reliability · p · r</div>
+    <div class="blk-bd">
+      <div class="tags"><span class="tag tg-r">HOT 🔥</span></div>
+      <div class="cmp2">
+        <div class="cb" style="background:var(--mint-p);border-color:var(--mint-m);">
+          <div class="cb-t" style="color:var(--mint-d)">Validity</div>
+          วัด<b>ถูกเรื่อง</b><br>ความเที่ยงตรง
+        </div>
+        <div class="cb" style="background:var(--sky-p);border-color:var(--sky-m);">
+          <div class="cb-t" style="color:var(--sky-d)">Reliability</div>
+          วัด<b>ได้เหมือนเดิม</b><br>ความเชื่อมั่น
+        </div>
+      </div>
+      <div class="form">ค่าความยาก p = ตอบถูก ÷ ผู้สอบทั้งหมด (ดี: 0.20–0.80)</div>
+      <div class="form">อำนาจจำแนก r = (P_H − P_L) ÷ (N/2) (ดี: r ≥ 0.20)</div>
+      <div class="trick">
+        <div class="trick-ph">นาฬิกาเร็ว 5 นาทีทุกวัน = Reliable✓ แต่ Valid✗</div>
+        <div class="trick-n">ไม่มี Reliability → ไม่มี Validity · Reliability เป็นเงื่อนไขของ Validity</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ════════════════════════════════
+     PAGE 6 · วิจัย
+════════════════════════════════ -->
+<div id="p6" class="pg">
+<div class="pt"><span>🔬</span> การวิจัยในชั้นเรียน</div>
+
+<div class="grid2">
+
+  <!-- PAOR -->
+  <div class="blk th-lav">
+    <div class="blk-hd"><div class="num">⭐</div> Action Research — วงจร PAOR</div>
+    <div class="blk-bd">
+      <div class="tags"><span class="tag tg-r">HOT 🔥</span></div>
+      <div class="paor">
+        <div class="ps" style="background:#FFEEF2;color:#C04060;">P<small>Plan<br>วางแผน</small></div>
+        <div class="ps" style="background:#EDFAF5;color:#2A9060;">A<small>Act<br>ปฏิบัติ</small></div>
+        <div class="ps" style="background:#FFFBEA;color:#A07010;">O<small>Observe<br>สังเกต</small></div>
+        <div class="ps" style="background:#F5F0FF;color:#6040A0;">R<small>Reflect<br>สะท้อนคิด</small></div>
+      </div>
+      <div class="trick">
+        <div class="trick-ph">"วางแผน → ลงมือ → จับตาดู → คิดทบทวน → วนใหม่"</div>
+        <div class="trick-n">Action Research = แก้ปัญหาชั้นเรียนจริง ทำซ้ำจนหาย</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- สถิติ + ประเภทวิจัย -->
+  <div class="blk th-sage">
+    <div class="blk-hd"><div class="num">2</div> ประเภทวิจัย + สถิติ</div>
+    <div class="blk-bd">
+      <table class="it"><thead><tr><th>ประเภท</th><th>สถิติ</th></tr></thead>
+      <tbody>
+        <tr><td><b>เชิงปริมาณ</b></td><td>t-test, F-test, χ², Mean, S.D.</td></tr>
+        <tr><td><b>เชิงคุณภาพ</b></td><td>Content Analysis</td></tr>
+        <tr><td><b>Action Research</b></td><td>ร้อยละ ค่าเฉลี่ย</td></tr>
+      </tbody></table>
+      <div class="tags" style="margin-top:6px;">
+        <span class="tag tg-g">t-test = เปรียบ 2 กลุ่ม</span>
+        <span class="tag tg-g">F-test = เปรียบ 3+ กลุ่ม</span>
+        <span class="tag tg-g">χ² = ความสัมพันธ์เชิงกลุ่ม</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ขั้นตอนวิจัย -->
+  <div class="blk th-sky span2">
+    <div class="blk-hd"><div class="num">3</div> ขั้นตอนการวิจัย 6 ขั้น</div>
+    <div class="blk-bd">
+      <div class="flow">
+        <div class="fs f1">1.ระบุปัญหา</div>
+        <div class="fs f2">2.ศึกษาเอกสาร</div>
+        <div class="fs f3">3.ออกแบบ</div>
+        <div class="fs f4">4.สร้างเครื่องมือ</div>
+        <div class="fs f5">5.วิเคราะห์</div>
+        <div class="fs f6">6.สรุปผล</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ════════════════════════════════
+     PAGE 7 · สื่อ/เทคโน
+════════════════════════════════ -->
+<div id="p7" class="pg">
+<div class="pt"><span>💻</span> สื่อ นวัตกรรม และเทคโนโลยีทางการศึกษา</div>
+
+<div class="grid2">
+
+  <!-- Edgar Dale -->
+  <div class="blk th-peach">
+    <div class="blk-hd"><div class="num">⭐</div> Edgar Dale — Cone of Experience</div>
+    <div class="blk-bd">
+      <div class="tags"><span class="tag tg-r">HOT 🔥</span></div>
+      <div class="cone">
+        <div style="background:#F8D0D0;color:#B04040;border-radius:8px 8px 0 0;font-size:11px;">ยอดกรวย — นามธรรม 🔤 อ่าน/ฟัง = จำน้อย</div>
+        <div style="background:#F8E0B8;color:#A06020;font-size:11px;">ภาพ วิดีโอ วิทยุ นิทรรศการ</div>
+        <div style="background:#F8F0B0;color:#908020;font-size:11px;">ทัศนศึกษา สาธิต</div>
+        <div style="background:#C8F0C0;color:#308030;font-size:11px;">จำลอง บทบาทสมมติ</div>
+        <div style="background:#A0E8D8;color:#208060;border-radius:0 0 8px 8px;font-size:11px;">ฐานกรวย 🙌 ประสบการณ์ตรง = จำมาก</div>
+      </div>
+      <div class="trick">
+        <div class="trick-ph">ยิ่งรูปธรรม → ยิ่งจำได้นาน</div>
+        <div class="trick-n">โจทย์ "จำได้นานที่สุด" = ประสบการณ์ตรง/ทดลองทำจริง</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TPACK + Digital -->
+  <div class="blk th-mint">
+    <div class="blk-hd"><div class="num">2</div> TPACK + Digital Literacy</div>
+    <div class="blk-bd">
+      <div class="tags"><span class="tag tg-r">HOT 🔥</span></div>
+      <div class="cmp2">
+        <div class="cb" style="background:var(--peach-p);border-color:var(--peach-m);">
+          <div class="cb-t" style="color:var(--peach-d)">T — Technology</div>ความรู้เรื่องเครื่องมือ
+        </div>
+        <div class="cb" style="background:var(--sky-p);border-color:var(--sky-m);">
+          <div class="cb-t" style="color:var(--sky-d)">P — Pedagogy</div>ความรู้วิธีสอน
+        </div>
+        <div class="cb" style="background:var(--yell-p);border-color:var(--yell-m);">
+          <div class="cb-t" style="color:var(--yell-d)">C — Content</div>ความรู้เนื้อหาวิชา
+        </div>
+        <div class="cb" style="background:var(--lav-p);border-color:var(--lav-m);">
+          <div class="cb-t" style="color:var(--lav-d)">TPACK = จุดกลาง</div>ครูที่สมบูรณ์แบบ
+        </div>
+      </div>
+      <b style="font-size:12.5px;color:var(--mint-d);display:block;margin-top:8px;">Digital Literacy 4 ด้าน:</b>
+      <div class="tags" style="margin-top:4px;">
+        <span class="tag tg-m">Use ใช้ได้ถูกต้อง</span>
+        <span class="tag tg-m">Safety ปลอดภัย</span>
+        <span class="tag tg-m">Literacy อ่าน/สร้าง</span>
+        <span class="tag tg-m">Ethics จริยธรรม</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ระบบดูแลช่วยเหลือ -->
+  <div class="blk th-lav span2">
+    <div class="blk-hd"><div class="num">3</div> ระบบดูแลช่วยเหลือนักเรียน 5 ขั้น + SDQ</div>
+    <div class="blk-bd">
+      <div class="flow">
+        <div class="fs f1">1.รู้จัก<small>ข้อมูลนักเรียน</small></div>
+        <div class="fs f2">2.คัดกรอง<small>SDQ</small></div>
+        <div class="fs f3">3.ส่งเสริม<small>กิจกรรม</small></div>
+        <div class="fs f4">4.ป้องกัน/แก้ไข<small>ให้คำปรึกษา</small></div>
+        <div class="fs f5">5.ส่งต่อ<small>ผู้เชี่ยวชาญ</small></div>
+      </div>
+      <div class="tags" style="margin-top:8px;">
+        <span class="tag tg-l">SDQ = Strengths and Difficulties Questionnaire</span>
+        <span class="tag tg-l">5 ด้าน: อารมณ์ · พฤติกรรม · สมาธิ · เพื่อน · สังคม</span>
+        <span class="tag tg-l">คัดกรอง: ปกติ / เสี่ยง / มีปัญหา</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- PAGE 8 ชุดเน้น -->
+<div id="p8" class="pg">
+<div class="pt"><span>🗂️</span> ชุดเน้น — ดูตรงนี้ก่อนเข้าห้องสอบ!</div>
+<div class="grid2">
+
+  <div class="blk th-peach span2">
+    <div class="blk-hd"><div class="num">🔢</div> ตัวเลขสำคัญต้องจำให้ขึ้นใจ <span class="tag tg-r">HOT🔥</span></div>
+    <div class="blk-bd">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        <div style="background:var(--rose-pale);border:1.5px solid var(--rose-mid);border-radius:10px;text-align:center;padding:10px 6px;"><div style="font-size:28px;font-weight:900;color:var(--rose-dark);">5</div><div style="font-size:11px;font-weight:700;color:var(--rose-dark);">ปี</div><div style="font-size:11px;">อายุใบอนุญาต</div></div>
+        <div style="background:var(--gold-pale);border:1.5px solid var(--gold-mid);border-radius:10px;text-align:center;padding:10px 6px;"><div style="font-size:28px;font-weight:900;color:var(--gold-dark);">180</div><div style="font-size:11px;font-weight:700;color:var(--gold-dark);">วัน</div><div style="font-size:11px;">ต่ออายุก่อนหมด</div></div>
+        <div style="background:var(--mint-pale);border:1.5px solid var(--mint-mid);border-radius:10px;text-align:center;padding:10px 6px;"><div style="font-size:28px;font-weight:900;color:var(--mint-dark);">2</div><div style="font-size:11px;font-weight:700;color:var(--mint-dark);">ปี</div><div style="font-size:11px;">ครูผู้ช่วยเตรียมพร้อม</div></div>
+        <div style="background:var(--sky-pale);border:1.5px solid var(--sky-mid);border-radius:10px;text-align:center;padding:10px 6px;"><div style="font-size:28px;font-weight:900;color:var(--sky-dark);">15</div><div style="font-size:11px;font-weight:700;color:var(--sky-dark);">วัน</div><div style="font-size:11px;">ละทิ้งราชการ=ร้ายแรง</div></div>
+        <div style="background:var(--lav-pale);border:1.5px solid var(--lav-mid);border-radius:10px;text-align:center;padding:10px 6px;"><div style="font-size:28px;font-weight:900;color:var(--lav-dark);">9</div><div style="font-size:11px;font-weight:700;color:var(--lav-dark);">ข้อ</div><div style="font-size:11px;">จรรยาบรรณ 5 หมวด</div></div>
+        <div style="background:var(--peach-pale);border:1.5px solid var(--peach-mid);border-radius:10px;text-align:center;padding:10px 6px;"><div style="font-size:28px;font-weight:900;color:var(--peach-dark);">12</div><div style="font-size:11px;font-weight:700;color:var(--peach-dark);">ข้อ</div><div style="font-size:11px;">มาตรฐานปฏิบัติงาน</div></div>
+        <div style="background:var(--sage-pale);border:1.5px solid var(--sage-mid);border-radius:10px;text-align:center;padding:10px 6px;"><div style="font-size:28px;font-weight:900;color:var(--sage-dark);">6</div><div style="font-size:11px;font-weight:700;color:var(--sage-dark);">ระดับ</div><div style="font-size:11px;">Bloom's Taxonomy</div></div>
+        <div style="background:#FFF5EA;border:1.5px solid #F8C890;border-radius:10px;text-align:center;padding:10px 6px;"><div style="font-size:28px;font-weight:900;color:#C06020;">60</div><div style="font-size:11px;font-weight:700;color:#C06020;">ปี</div><div style="font-size:11px;">เกษียณอายุ</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="blk th-mint">
+    <div class="blk-hd"><div class="num">💡</div> รวมทริคจำเร็วทุกเรื่อง</div>
+    <div class="blk-bd">
+      <table class="it"><thead><tr><th>เรื่อง</th><th>ทริคจำ</th></tr></thead><tbody>
+        <tr><td>ม.8 หลักการ 3</td><td><b style="color:var(--peach-dark)">"ตลอด — สังคม — พัฒนา"</b></td></tr>
+        <tr><td>โทษ 5 สถาน</td><td><b style="color:var(--peach-dark)">"ภาคทัณฑ์ ตัด ลด ปลด ไล่"</b></td></tr>
+        <tr><td>ใบอนุญาต</td><td><b style="color:var(--peach-dark)">"5 ปี ต่อก่อน 6 เดือน"</b></td></tr>
+        <tr><td>จรรยาบรรณ 9</td><td><b style="color:var(--peach-dark)">"ตน วิชา เด็ก ปก เพื่อน×2 สังคม×3"</b></td></tr>
+        <tr><td>มาตรฐาน 12</td><td><b style="color:var(--mint-dark)">"รู้เขา(5) รู้เรา(3) รู้สังคม(4)"</b></td></tr>
+        <tr><td>Bloom 6</td><td><b style="color:var(--mint-dark)">"จำ เข้าใจ ใช้ แยก ตัดสิน สร้าง"</b></td></tr>
+        <tr><td>Piaget 4</td><td><b style="color:var(--mint-dark)">"เล็กสัมผัส → พูด → รูปธรรม → นามธรรม"</b></td></tr>
+        <tr><td>ทฤษฎีรวม</td><td><b style="color:var(--mint-dark)">"มาสัมผัสพฤติกรรม"</b></td></tr>
+        <tr><td>สมรรถนะ 5</td><td><b style="color:var(--lav-dark)">"สื่อ คิด แก้ ชีวิต เทค"</b></td></tr>
+        <tr><td>คุณลักษณะ 8</td><td><b style="color:var(--lav-dark)">"รัก ซื่อ วินัย ใฝ่ พอ มุ่ง ไทย สาธา"</b></td></tr>
+        <tr><td>Backward Design</td><td><b style="color:var(--lav-dark)">"อยากได้? → รู้ยังไง? → สอนยังไง?"</b></td></tr>
+        <tr><td>Validity</td><td><b style="color:var(--sky-dark)">นาฬิกาเร็ว = Reliable แต่ไม่ Valid</b></td></tr>
+        <tr><td>PAOR</td><td><b style="color:var(--sky-dark)">"วางแผน ลงมือ จับตา คิดทบทวน"</b></td></tr>
+        <tr><td>Dale Cone</td><td><b style="color:var(--sage-dark)">ฐานกรวย = ทำจริง = จำมากสุด</b></td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <div class="blk th-lav">
+    <div class="blk-hd"><div class="num">⚡</div> โจทย์สถานการณ์ "ครูควรทำอย่างไร"</div>
+    <div class="blk-bd">
+      <div class="strip"><strong>หลักคิด:</strong> จรรยาบรรณ + จิตวิทยา + หลักสูตร = คำตอบที่ถูก</div>
+      <table class="it" style="margin-top:7px;"><thead><tr><th>โจทย์</th><th>คำตอบ</th></tr></thead><tbody>
+        <tr><td>ครูช่วยแล้วค่อยถอน</td><td>Scaffolding (Vygotsky)</td></tr>
+        <tr><td>สอนง่ายไปยาก วนซ้ำ</td><td>Spiral Curriculum (Bruner)</td></tr>
+        <tr><td>นักเรียนออกแบบผลงาน</td><td>Bloom ระดับ Create</td></tr>
+        <tr><td>เด็กวัยรุ่นอยากรู้ตัวตน</td><td>Erikson ขั้น 5 Identity</td></tr>
+        <tr><td>ประเมินระหว่างสอน ปรับทันที</td><td>Formative Assessment</td></tr>
+        <tr><td>ครูทดลองวิธีสอนใหม่แก้ปัญหา</td><td>Action Research PAOR</td></tr>
+        <tr><td>ครูทำให้เด็กเชื่อว่าทำได้</td><td>Self-efficacy (Bandura)</td></tr>
+        <tr><td>ครูแสดงให้ดู เด็กทำตาม</td><td>Modeling (Bandura)</td></tr>
+        <tr><td>ออกแบบสอนจากเป้าหมายก่อน</td><td>Backward Design</td></tr>
+        <tr><td>สื่อที่จำได้นานที่สุด</td><td>ประสบการณ์ตรง (Dale Cone)</td></tr>
+        <tr><td>ข้อสอบแยกเก่ง-อ่อนได้ดี</td><td>r ≥ 0.20 = อำนาจจำแนกดี</td></tr>
+        <tr><td>ไม่มีใบอนุญาต จะสอนได้ไหม</td><td>ไม่ได้ ผิด พ.ร.บ.สภาครูฯ</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- PAGE 9 · ภาค ก เพิ่มเติม -->
+<div id="p9" class="pg">
+<div class="pt"><span>➕</span> ภาค ก — เนื้อหาเพิ่มเติมที่ออกสอบ</div>
+<div class="grid2">
+
+  <!-- ธรรมาภิบาล / พ.ร.ฎ.บ้านเมืองที่ดี -->
+  <div class="blk th-mint">
+    <div class="blk-hd"><div class="num">⭐</div> พ.ร.ฎ.การบริหารกิจการบ้านเมืองที่ดี 2546 <span class="tag tg-r">HOT🔥</span></div>
+    <div class="blk-bd">
+      <div class="tags"><span class="tag tg-m">หลักธรรมาภิบาล 7 ข้อ</span></div>
+      <table class="it" style="margin-top:6px;"><thead><tr><th>#</th><th>หลัก</th><th>ใจความ</th></tr></thead><tbody>
+        <tr><td>1</td><td><b>สุข</b></td><td>เกิดประโยชน์สุขของประชาชน</td></tr>
+        <tr><td>2</td><td><b>สัมฤทธิ์</b></td><td>เกิดผลสัมฤทธิ์ต่อภารกิจ</td></tr>
+        <tr><td>3</td><td><b>คุ้มค่า</b></td><td>มีประสิทธิภาพและคุ้มค่า</td></tr>
+        <tr><td>4</td><td><b>ลดขั้นตอน</b></td><td>ลดขั้นตอนที่ไม่จำเป็น</td></tr>
+        <tr><td>5</td><td><b>ปรับปรุง</b></td><td>ปรับปรุงภารกิจให้ทันสถานการณ์</td></tr>
+        <tr><td>6</td><td><b>สะดวก</b></td><td>ประชาชนได้รับความสะดวก</td></tr>
+        <tr><td>7</td><td><b>ประเมิน</b></td><td>ประเมินผลอย่างสม่ำเสมอ</td></tr>
+      </tbody></table>
+      <div class="trick">
+        <div class="trick-ph">"สุข สัมฤทธิ์ คุ้มค่า ลดขั้น ปรับปรุง สะดวก ประเมิน"</div>
+        <div class="trick-n">มาตรา 6 = หัวใจสำคัญ 7 ประการ เป้าหมายสูงสุด = ประโยชน์สุขของประชาชน</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- หลักธรรมาภิบาล 6 หลัก -->
+  <div class="blk th-sky">
+    <div class="blk-hd"><div class="num">2</div> หลักธรรมาภิบาล 6 หลัก (Good Governance) <span class="tag tg-r">HOT🔥</span></div>
+    <div class="blk-bd">
+      <div class="tags"><span class="tag tg-s">ออกคู่กับ พ.ร.ฎ.บ้านเมืองที่ดีเสมอ</span></div>
+      <table class="it" style="margin-top:6px;"><thead><tr><th>หลัก</th><th>ความหมาย</th></tr></thead><tbody>
+        <tr><td><b>นิติธรรม</b></td><td>ปฏิบัติตามกฎหมาย กติกาเป็นธรรม</td></tr>
+        <tr><td><b>คุณธรรม</b></td><td>ซื่อสัตย์ มีจริยธรรม</td></tr>
+        <tr><td><b>โปร่งใส</b></td><td>ตรวจสอบได้ เปิดเผยข้อมูล</td></tr>
+        <tr><td><b>มีส่วนร่วม</b></td><td>เปิดโอกาสให้ทุกฝ่ายมีส่วนร่วม</td></tr>
+        <tr><td><b>รับผิดชอบ</b></td><td>ตรวจสอบได้ รับผิดชอบต่อผลการปฏิบัติ</td></tr>
+        <tr><td><b>คุ้มค่า</b></td><td>ใช้ทรัพยากรอย่างประหยัด คุ้มค่า</td></tr>
+      </tbody></table>
+      <div class="trick">
+        <div class="trick-ph">"นิติ คุณ โปร่ง ร่วม รับ คุ้ม"</div>
+        <div class="trick-n">ทั้ง 6 หลักนำไปใช้ในการบริหารโรงเรียนและหน่วยงานของรัฐ</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- พ.ร.บ.ข้อมูลข่าวสาร 2540 -->
+  <div class="blk th-lav">
+    <div class="blk-hd"><div class="num">3</div> พ.ร.บ.ข้อมูลข่าวสารของราชการ พ.ศ. 2540 <span class="tag tg-r">HOT🔥</span></div>
+    <div class="blk-bd">
+      <table class="it"><thead><tr><th>ประเด็น</th><th>สาระสำคัญ</th></tr></thead><tbody>
+        <tr><td><b>หลักการ</b></td><td>ประชาชนมีสิทธิรับรู้ข้อมูลข่าวสารของราชการ</td></tr>
+        <tr><td><b>เปิดเผย</b></td><td>หน่วยงานต้องเปิดเผยข้อมูลโดยทั่วไป</td></tr>
+        <tr><td><b>ลงราชกิจจาฯ</b></td><td>ข้อมูลที่ต้องลงราชกิจจานุเบกษา เช่น โครงสร้าง อำนาจหน้าที่ วิธีปฏิบัติงาน</td></tr>
+        <tr><td><b>ขอดูได้</b></td><td>ประชาชนขอตรวจดูและคัดสำเนาได้</td></tr>
+        <tr><td><b>ข้อมูลลับ</b></td><td>ข้อมูลความมั่นคง ส่วนตัว ยกเว้นการเปิดเผยได้</td></tr>
+        <tr><td><b>คณะกรรมการ</b></td><td>กรรมการข้อมูลข่าวสารของราชการ ทำหน้าที่ดูแล</td></tr>
+      </tbody></table>
+      <div class="trick">
+        <div class="trick-ph">ประชาชนมีสิทธิรู้ข้อมูลรัฐ — รัฐต้องโปร่งใส</div>
+        <div class="trick-n">โจทย์: "ประชาชนจะขอดูข้อมูลหน่วยงานได้ไหม" = ได้ ตาม พ.ร.บ.นี้</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- นโยบายการศึกษาปัจจุบัน -->
+  <div class="blk th-yell">
+    <div class="blk-hd"><div class="num">4</div> นโยบายการศึกษาปัจจุบัน ปี 2567–2568 <span class="tag tg-r">HOT🔥</span></div>
+    <div class="blk-bd">
+      <div class="tags"><span class="tag tg-y">ออกสอบตามปีที่สอบ ต้องอัปเดต</span></div>
+      <table class="it" style="margin-top:6px;"><thead><tr><th>นโยบาย</th><th>ใจความ</th></tr></thead><tbody>
+        <tr><td><b>เรียนดี มีความสุข</b></td><td>ลดภาระนักเรียน ผู้ปกครอง ครู</td></tr>
+        <tr><td><b>Safety Zone</b></td><td>โรงเรียนปลอดภัย ป้องกันการกลั่นแกล้ง (Bully)</td></tr>
+        <tr><td><b>Soft Power</b></td><td>ส่งเสริมทักษะทางวัฒนธรรม ศิลปะ กีฬา</td></tr>
+        <tr><td><b>AI ในการศึกษา</b></td><td>นำ AI มาใช้พัฒนาการเรียนรู้อย่างมีจริยธรรม</td></tr>
+        <tr><td><b>ลดเวลาเรียน เพิ่มเวลารู้</b></td><td>ลดชั่วโมงวิชาการ เพิ่มกิจกรรม Active Learning</td></tr>
+        <tr><td><b>PISA</b></td><td>พัฒนาคุณภาพการศึกษาสู่มาตรฐานสากล</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <!-- พ.ร.บ.วิธีปฏิบัติราชการทางปกครอง -->
+  <div class="blk th-rose">
+    <div class="blk-hd"><div class="num">5</div> พ.ร.บ.วิธีปฏิบัติราชการทางปกครอง 2539 + ความรับผิดทางละเมิด 2539</div>
+    <div class="blk-bd">
+      <div class="c2">
+        <div class="cb" style="background:var(--rose-pale);border-color:var(--rose-mid);">
+          <div class="ct" style="color:var(--rose-dark)">วิธีปฏิบัติฯ — จำ</div>
+          <ul style="padding-left:14px;font-size:12px;">
+            <li>คำสั่งทางปกครองต้องเป็นลายลักษณ์อักษร</li>
+            <li>ให้โอกาสชี้แจงก่อนออกคำสั่ง</li>
+            <li>อุทธรณ์ได้ใน <b>15 วัน</b></li>
+            <li>ผู้มีอำนาจต้องไม่มีส่วนได้เสีย</li>
+          </ul>
+        </div>
+        <div class="cb" style="background:var(--peach-pale);border-color:var(--peach-mid);">
+          <div class="ct" style="color:var(--peach-dark)">ความรับผิดทางละเมิด — จำ</div>
+          <ul style="padding-left:14px;font-size:12px;">
+            <li>เจ้าหน้าที่ทำละเมิด = รัฐรับผิดแทน</li>
+            <li>จงใจ/ประมาทเลินเล่ออย่างร้ายแรง = ไล่เบี้ยได้</li>
+            <li>ฟ้องรัฐได้ใน <b>1 ปี</b> นับแต่รู้</li>
+          </ul>
+        </div>
+      </div>
+      <div class="trick">
+        <div class="trick-ph">อุทธรณ์คำสั่งปกครอง = 15 วัน | ฟ้องละเมิด = 1 ปี</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ภาษาไทย/อังกฤษแนวออกสอบ -->
+  <div class="blk th-sage">
+    <div class="blk-hd"><div class="num">6</div> ภาษาไทย + ภาษาอังกฤษ — แนวออกสอบ</div>
+    <div class="blk-bd">
+      <div class="c2">
+        <div class="cb" style="background:var(--sage-pale);border-color:var(--sage-mid);">
+          <div class="ct" style="color:var(--sage-dark)">🇹🇭 ภาษาไทย</div>
+          <ul style="padding-left:14px;font-size:12px;">
+            <li><b>อ่านจับใจความ</b> — สรุปสาระหลัก รายละเอียดสนับสนุน</li>
+            <li><b>คำราชาศัพท์</b> — กริยา นาม สรรพนาม</li>
+            <li><b>การใช้ภาษา</b> — คำที่มักเขียนผิด สำนวน</li>
+            <li><b>ประโยค</b> — ประธาน กรรม กริยา ชนิดของประโยค</li>
+          </ul>
+        </div>
+        <div class="cb" style="background:var(--sky-pale);border-color:var(--sky-mid);">
+          <div class="ct" style="color:var(--sky-dark)">🌐 ภาษาอังกฤษ</div>
+          <ul style="padding-left:14px;font-size:12px;">
+            <li><b>Reading</b> — Main idea, Inference, Vocabulary in context</li>
+            <li><b>Grammar</b> — Tense, Passive voice, Relative clause</li>
+            <li><b>Vocabulary</b> — Synonym, Antonym</li>
+            <li><b>Error</b> — หาคำผิดในประโยค</li>
+          </ul>
+        </div>
+      </div>
+      <div class="trick">
+        <div class="trick-ph">อ่านโจทย์ภาษาไทยช้าๆ 2 รอบ — ตอบจากข้อความ ไม่ใช่ความรู้เดิม</div>
+        <div class="trick-n">อังกฤษ: อ่าน passage ก่อน แล้วดูคำถาม หาคำตอบใน text</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- คณิตศาสตร์แนวออกสอบ -->
+  <div class="blk th-peach span2">
+    <div class="blk-hd"><div class="num">7</div> คณิตศาสตร์และตรรกะ — แนวออกสอบที่ต้องฝึก</div>
+    <div class="blk-bd">
+      <div class="grid2" style="gap:8px;">
+        <div>
+          <table class="it"><thead><tr><th>หัวข้อ</th><th>เทคนิค</th></tr></thead><tbody>
+            <tr><td><b>อนุกรม</b></td><td>หาผลต่าง/อัตราส่วนระหว่างเทอม แล้วหาเทอมถัดไป</td></tr>
+            <tr><td><b>เปอร์เซ็นต์</b></td><td>กำไร = (ขาย-ทุน)/ทุน×100 | ลด = ลด/ราคาเดิม×100</td></tr>
+            <tr><td><b>อัตราส่วน</b></td><td>a:b = c:d → ad = bc (cross multiply)</td></tr>
+            <tr><td><b>เฉลี่ย</b></td><td>ผลรวม = เฉลี่ย × จำนวน</td></tr>
+          </tbody></table>
+        </div>
+        <div>
+          <table class="it"><thead><tr><th>ตรรกะ</th><th>เทคนิค</th></tr></thead><tbody>
+            <tr><td><b>Syllogism</b></td><td>A→B, B→C ดังนั้น A→C | วาด Venn ช่วย</td></tr>
+            <tr><td><b>ตาราง</b></td><td>อ่านแกน x,y ก่อน แล้วดูคำถาม</td></tr>
+            <tr><td><b>ความน่าจะเป็น</b></td><td>P = จำนวนที่ต้องการ / ทั้งหมด</td></tr>
+            <tr><td><b>สถิติ</b></td><td>Mean=ผลรวม/n | Median=ตรงกลาง | Mode=มากสุด</td></tr>
+          </tbody></table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- PAGE 10 · ภาค ข เพิ่มเติม -->
+<div id="p10" class="pg">
+<div class="pt"><span>➕</span> ภาค ข — เนื้อหาเพิ่มเติมที่ออกสอบ</div>
+<div class="grid2">
+
+  <!-- Gagné 9 เหตุการณ์ -->
+  <div class="blk th-yell">
+    <div class="blk-hd"><div class="num">⭐</div> Gagné — 9 เหตุการณ์การสอน (Events of Instruction) <span class="tag tg-r">HOT🔥</span></div>
+    <div class="blk-bd">
+      <div class="tags"><span class="tag tg-y">ออกสอบบ่อยขึ้นในช่วงหลัง</span></div>
+      <ol class="nl">
+        <li><b>เรียกความสนใจ</b> — Gain Attention (ตั้งคำถาม เล่าเรื่อง ใช้สื่อ)</li>
+        <li><b>แจ้งจุดประสงค์</b> — Inform Learners of Objectives</li>
+        <li><b>กระตุ้นความรู้เดิม</b> — Stimulate Recall of Prior Learning</li>
+        <li><b>นำเสนอเนื้อหา</b> — Present the Content</li>
+        <li><b>ให้แนวทาง</b> — Provide Learning Guidance (ตัวอย่าง analogies)</li>
+        <li><b>ให้ฝึกปฏิบัติ</b> — Elicit Performance (Practice)</li>
+        <li><b>ให้ข้อมูลย้อนกลับ</b> — Provide Feedback</li>
+        <li><b>ประเมินผล</b> — Assess Performance</li>
+        <li><b>ส่งเสริมการจำและถ่ายโอน</b> — Enhance Retention and Transfer</li>
+      </ol>
+      <div class="trick">
+        <div class="trick-ph">"สนใจ → รู้เป้า → ระลึก → รับเนื้อหา → แนวทาง → ฝึก → ป้อนกลับ → ประเมิน → ถ่ายโอน"</div>
+        <div class="trick-n">โจทย์: ขั้นใดของ Gagné ที่ครูทำก่อนสอน = ขั้น 1-3</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Erikson ลึก -->
+  <div class="blk th-lav">
+    <div class="blk-hd"><div class="num">⭐</div> Erikson 8 ขั้น — แบบละเอียด (ออกสอบบ่อย)</div>
+    <div class="blk-bd">
+      <table class="it"><thead><tr><th>ขั้น</th><th>อายุ</th><th>ความขัดแย้ง</th><th>ผลดี / บทบาทครู</th></tr></thead><tbody>
+        <tr><td>1</td><td>0–1</td><td>Trust vs Mistrust</td><td>ไว้วางใจ / ตอบสนองสม่ำเสมอ</td></tr>
+        <tr><td>2</td><td>1–3</td><td>Autonomy vs Shame</td><td>อิสระ / ให้ทดลองด้วยตัวเอง</td></tr>
+        <tr><td>3</td><td>3–6</td><td>Initiative vs Guilt</td><td>ริเริ่ม / ส่งเสริมการสำรวจ</td></tr>
+        <tr style="background:#FFF0F8;"><td><b>4</b></td><td><b>6–12</b></td><td><b>Industry vs Inferiority</b></td><td><b>ขยัน / ชมเมื่อสำเร็จ อย่าตำหนิ ⭐</b></td></tr>
+        <tr style="background:#F0F0FF;"><td><b>5</b></td><td><b>12–18</b></td><td><b>Identity vs Role Confusion</b></td><td><b>อัตลักษณ์ / เปิดให้ค้นหาตัวเอง ⭐</b></td></tr>
+        <tr><td>6</td><td>18–40</td><td>Intimacy vs Isolation</td><td>ความใกล้ชิด</td></tr>
+        <tr><td>7</td><td>40–65</td><td>Generativity vs Stagnation</td><td>สร้างสรรค์สังคม</td></tr>
+        <tr><td>8</td><td>65+</td><td>Ego Integrity vs Despair</td><td>ยอมรับชีวิตที่ผ่านมา</td></tr>
+      </tbody></table>
+      <div class="trick">
+        <div class="trick-ph">วัยเรียน = Industry (ขยัน) | วัยรุ่น = Identity (ตัวตน)</div>
+        <div class="trick-n">ครูประถม → ขั้น 4: เสริมความสำเร็จ อย่าให้รู้สึกด้อยค่า | ม.ต้น → ขั้น 5: เปิดพื้นที่ค้นหาตัวตน</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Positive Discipline + บริหารชั้นเรียน -->
+  <div class="blk th-peach">
+    <div class="blk-hd"><div class="num">3</div> Positive Discipline + การบริหารชั้นเรียนที่ดี</div>
+    <div class="blk-bd">
+      <div class="tags"><span class="tag tg-r">HOT🔥</span><span class="tag tg-p">โจทย์สถานการณ์บ่อย</span></div>
+      <table class="it" style="margin-top:6px;"><thead><tr><th>แนวทาง</th><th>ตัวอย่างปฏิบัติ</th></tr></thead><tbody>
+        <tr><td><b>Positive Reinforcement</b></td><td>ชม ให้รางวัล สร้างแรงจูงใจภายใน</td></tr>
+        <tr><td><b>Natural Consequence</b></td><td>ให้เผชิญผลที่เกิดขึ้นเองตามธรรมชาติ</td></tr>
+        <tr><td><b>Logical Consequence</b></td><td>ผลที่เชื่อมกับพฤติกรรม (ทำแก้วแตก = ช่วยเก็บ)</td></tr>
+        <tr><td><b>Class Meeting</b></td><td>ประชุมชั้นเรียน ให้นักเรียนร่วมแก้ปัญหา</td></tr>
+        <tr><td><b>Growth Mindset</b></td><td>สอนให้เชื่อว่าพัฒนาได้ ความผิดพลาดคือการเรียนรู้</td></tr>
+      </tbody></table>
+      <div class="trick">
+        <div class="trick-ph">โจทย์ "ครูควรทำอย่างไรเมื่อเด็กทำผิด" = Positive Discipline ไม่ใช่ลงโทษ</div>
+        <div class="trick-n">Fixed Mindset = ความสามารถตายตัว | Growth Mindset = พัฒนาได้เสมอ</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ausubel + ทฤษฎีเพิ่มเติม -->
+  <div class="blk th-sage">
+    <div class="blk-hd"><div class="num">4</div> Ausubel · Thorndike · Dewey · ทฤษฎีเพิ่มเติม</div>
+    <div class="blk-bd">
+      <table class="it"><thead><tr><th>นักทฤษฎี</th><th>แนวคิด</th><th>จุดสำคัญ</th></tr></thead><tbody>
+        <tr><td><b>Ausubel</b></td><td>Meaningful Learning</td><td>เรียนรู้อย่างมีความหมาย เชื่อมกับความรู้เดิม<br>ใช้ Advance Organizer นำก่อนสอน</td></tr>
+        <tr><td><b>Thorndike</b></td><td>Connectionism (S-R)</td><td>กฎ 3 ข้อ: ความพร้อม · ใช้บ่อย · ผล<br>การเรียนรู้ = ลองผิดลองถูก</td></tr>
+        <tr><td><b>Dewey</b></td><td>Learning by Doing</td><td>เรียนรู้จากประสบการณ์จริง<br>"Education is life" โรงเรียนคือสังคมย่อ</td></tr>
+        <tr><td><b>Kolb</b></td><td>Experiential Learning Cycle</td><td>4 ขั้น: ทำ → สะท้อน → สรุปแนวคิด → ทดลองใหม่</td></tr>
+        <tr><td><b>Gardner</b></td><td>Multiple Intelligences</td><td>ปัญญา 8 ด้าน: ภาษา·ตรรกะ·ดนตรี·กาย·มิติ·ธรรมชาติ·ตัวตน·สังคม</td></tr>
+      </tbody></table>
+      <div class="trick">
+        <div class="trick-ph">Gardner 8 ด้าน: "ภาษา ตรรก ดนตรี ร่างกาย มิติ ธรรมชาติ รู้ตน รู้สังคม"</div>
+        <div class="trick-n">Dewey = บิดาแห่ง Progressive Education | Kolb = เรียนรู้วนเป็นวงจร</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- จิตวิทยาพัฒนาการเพิ่มเติม -->
+  <div class="blk th-sky">
+    <div class="blk-hd"><div class="num">5</div> พัฒนาการเด็ก — จิตวิทยาพัฒนาการเพิ่มเติม</div>
+    <div class="blk-bd">
+      <table class="it"><thead><tr><th>ช่วงวัย</th><th>ลักษณะสำคัญ</th><th>บทบาทครู</th></tr></thead><tbody>
+        <tr><td><b>ปฐมวัย (3–6)</b></td><td>เรียนรู้ผ่านการเล่น จินตนาการสูง ยึดตัวเองเป็นศูนย์กลาง</td><td>เล่นปนเรียน ไม่บังคับ</td></tr>
+        <tr><td><b>วัยเรียนตอนต้น (6–9)</b></td><td>อยากรู้อยากเห็น ชอบสังคมเพื่อน เริ่มเข้าใจกฎเกณฑ์</td><td>เรียนเป็นกลุ่ม มีกติกา</td></tr>
+        <tr><td><b>วัยเรียนตอนปลาย (9–12)</b></td><td>เพื่อนสำคัญมาก แข่งขัน ชอบเป็นที่ยอมรับ</td><td>Cooperative Learning</td></tr>
+        <tr><td><b>วัยรุ่น (12–18)</b></td><td>ค้นหาอัตลักษณ์ อิทธิพลกลุ่มเพื่อนสูง อารมณ์ขึ้นลง</td><td>ให้อิสระ รับฟัง ไม่ตัดสิน</td></tr>
+      </tbody></table>
+      <div class="trick">
+        <div class="trick-ph">วัยรุ่น = "ตัวตน + เพื่อน + อารมณ์" ครูต้องรับฟัง ไม่ตัดสิน</div>
+        <div class="trick-n">วัยเรียน ป.1–6 = Concrete Operational (Piaget) + Industry (Erikson)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- โจทย์จรรยาบรรณสถานการณ์ -->
+  <div class="blk th-rose span2">
+    <div class="blk-hd"><div class="num">⭐</div> โจทย์จรรยาบรรณ "ครูทำถูก/ผิด" — แนวออกสอบบ่อยมาก <span class="tag tg-r">HOT🔥</span></div>
+    <div class="blk-bd">
+      <div class="grid2" style="gap:8px;">
+        <div>
+          <b style="color:var(--sage-dark);font-size:12px;">✅ ครูทำถูก (ตามจรรยาบรรณ)</b>
+          <table class="it" style="margin-top:4px;"><tbody>
+            <tr><td>แจ้งผู้ปกครองเมื่อเด็กมีปัญหา</td></tr>
+            <tr><td>ให้คำปรึกษาโดยไม่รับผลประโยชน์</td></tr>
+            <tr><td>ไม่เปิดเผยข้อมูลส่วนตัวของนักเรียน</td></tr>
+            <tr><td>รับฟังความคิดเห็นของนักเรียนทุกคน</td></tr>
+            <tr><td>ใช้ภาษาสุภาพ ไม่ดูหมิ่นนักเรียน</td></tr>
+            <tr><td>พัฒนาตนเองอย่างต่อเนื่อง</td></tr>
+          </tbody></table>
+        </div>
+        <div>
+          <b style="color:var(--rose-dark);font-size:12px;">❌ ครูทำผิด (ผิดจรรยาบรรณ)</b>
+          <table class="it" style="margin-top:4px;"><tbody>
+            <tr><td>สอนพิเศษนักเรียนตัวเองโดยเรียกเงิน</td></tr>
+            <tr><td>เปิดเผยผลการเรียนโดยไม่ได้รับอนุญาต</td></tr>
+            <tr><td>ลงโทษนักเรียนด้วยวิธีรุนแรง</td></tr>
+            <tr><td>รับของขวัญจากผู้ปกครองเพื่อให้คะแนน</td></tr>
+            <tr><td>พูดจาดูถูกเพื่อนครู</td></tr>
+            <tr><td>ไม่เข้าสอนโดยไม่มีเหตุผล</td></tr>
+          </tbody></table>
+        </div>
+      </div>
+      <div class="trick">
+        <div class="trick-ph">ถาม "ครูควรทำอย่างไร" → เลือกข้อที่ยึด "ผู้เรียนเป็นศูนย์กลาง" และ "ไม่แสวงหาประโยชน์"</div>
+        <div class="trick-n">สอนพิเศษนักเรียนตัวเอง = ผิดจรรยาบรรณ แต่สอนคนอื่นได้ | รับของขวัญ = ผิดหลักคุณธรรม</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- การประเมินตามสภาพจริงลึกขึ้น -->
+  <div class="blk th-mint">
+    <div class="blk-hd"><div class="num">7</div> การประเมินตามสภาพจริง + ระบบดูแลช่วยเหลือลึกขึ้น</div>
+    <div class="blk-bd">
+      <div class="c2">
+        <div class="cb" style="background:var(--mint-pale);border-color:var(--mint-mid);">
+          <div class="ct" style="color:var(--mint-dark)">Authentic Assessment</div>
+          <ul style="padding-left:14px;font-size:12px;">
+            <li><b>Portfolio</b> — แฟ้มสะสมผลงาน มี Reflection</li>
+            <li><b>Rubric</b> — เกณฑ์คะแนนชัดเจน Holistic/Analytic</li>
+            <li><b>Checklist</b> — รายการตรวจสอบพฤติกรรม</li>
+            <li><b>Rating Scale</b> — มาตรประมาณค่า 3/5 ระดับ</li>
+            <li><b>Observation</b> — สังเกตพฤติกรรมระหว่างทำงาน</li>
+          </ul>
+        </div>
+        <div class="cb" style="background:var(--sky-pale);border-color:var(--sky-mid);">
+          <div class="ct" style="color:var(--sky-dark)">SDQ + ระบบดูแล</div>
+          <ul style="padding-left:14px;font-size:12px;">
+            <li>SDQ ประเมิน <b>5 ด้าน</b> ใน 25 ข้อ</li>
+            <li>ผล <b>ปกติ</b> = ส่งเสริม ดูแลทั่วไป</li>
+            <li>ผล <b>เสี่ยง</b> = ป้องกัน ให้คำปรึกษา</li>
+            <li>ผล <b>มีปัญหา</b> = แก้ไข ส่งต่อผู้เชี่ยวชาญ</li>
+            <li>Home Visit = เยี่ยมบ้าน เก็บข้อมูล</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- สาระการเรียนรู้ 8 กลุ่ม -->
+  <div class="blk th-peach">
+    <div class="blk-hd"><div class="num">8</div> กลุ่มสาระการเรียนรู้ 8 กลุ่ม + ตัวชี้วัด</div>
+    <div class="blk-bd">
+      <div class="tags" style="margin-bottom:6px;">
+        <span class="tag gp">1. ภาษาไทย</span>
+        <span class="tag gp">2. คณิตศาสตร์</span>
+        <span class="tag gp">3. วิทยาศาสตร์และเทคโนโลยี</span>
+        <span class="tag gp">4. สังคมศึกษา ศาสนา วัฒนธรรม</span>
+        <span class="tag gp">5. สุขศึกษาและพลศึกษา</span>
+        <span class="tag gp">6. ศิลปะ</span>
+        <span class="tag gp">7. การงานอาชีพ</span>
+        <span class="tag gp">8. ภาษาต่างประเทศ</span>
+      </div>
+      <table class="it"><thead><tr><th>ระดับ</th><th>ตัวชี้วัด</th><th>มาตรฐาน</th></tr></thead><tbody>
+        <tr><td>ป.1–ม.3</td><td><b>ตัวชี้วัดชั้นปี</b></td><td>บังคับ เป็นเกณฑ์จบช่วงชั้น</td></tr>
+        <tr><td>ม.4–ม.6</td><td><b>ตัวชี้วัดช่วงชั้น</b></td><td>บังคับ เป็นเกณฑ์จบการศึกษา</td></tr>
+      </tbody></table>
+      <div class="trick">
+        <div class="trick-ph">"ไทย คณิต วิทย์ สังคม สุข ศิลป์ การงาน ภาษาต่าง" = 8 กลุ่ม</div>
+        <div class="trick-n">กิจกรรมพัฒนาผู้เรียน ≠ กลุ่มสาระ แต่บังคับเช่นกัน (แนะแนว · ลูกเสือ · ชุมนุม)</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<footer>
+  <div style="display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:10px;">
+    <div style="flex:1;height:1px;background:linear-gradient(to right,transparent,var(--peach-mid));max-width:120px;"></div>
+    <div style="font-size:11px;color:var(--muted);letter-spacing:2px;">————</div>
+    <div style="flex:1;height:1px;background:linear-gradient(to left,transparent,var(--peach-mid));max-width:120px;"></div>
+  </div>
+  <div style="display:inline-block;border:1.5px solid var(--peach-mid);border-radius:40px;padding:16px 40px;background:var(--paper);">
+    <div style="font-size:15px;font-weight:800;color:var(--ink);margin-bottom:3px;">🎀 เชื่อในตัวเอง 💗</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:8px;font-style:italic;">You've got this ✨</div>
+    <div style="display:flex;align-items:center;gap:8px;justify-content:center;margin-bottom:8px;">
+      <div style="flex:1;height:1px;background:var(--peach-mid);max-width:50px;"></div>
+      <span style="color:var(--peach);font-size:13px;">♡</span>
+      <div style="flex:1;height:1px;background:var(--peach-mid);max-width:50px;"></div>
+    </div>
+    <div style="font-size:12px;font-weight:700;color:var(--ink2);letter-spacing:3px;">READ · EAT · REST 🌿</div>
+  </div>
+</footer>
+
+<script>
+function go(id, btn){
+  document.querySelectorAll('.pg').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b => b.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  btn.classList.add('on');
+  // scroll active tab button into view in nav
+  btn.scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
+  // scroll page to top
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// wrap tables for horizontal scroll on small screens
+document.querySelectorAll('.it').forEach(t => {
+  if(!t.parentElement.classList.contains('tbl-wrap')){
+    const w = document.createElement('div');
+    w.className = 'tbl-wrap';
+    t.parentNode.insertBefore(w, t);
+    w.appendChild(t);
+  }
+});
+
+// iPad/iPhone: prevent double-tap zoom on buttons
+document.querySelectorAll('.nb').forEach(b => {
+  b.addEventListener('touchend', e => { e.preventDefault(); b.click(); });
+});
+</script>
+</body>
+</html>
